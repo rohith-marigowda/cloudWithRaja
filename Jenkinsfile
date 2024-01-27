@@ -2,7 +2,7 @@ pipeline {
 
 	environment {
 	dockerImage = "rohithmarigowda/assignment"
-        dockerTag = "${BRANCH_NAME}-${BUILD_NUMBER}"
+        dockerTag = "${BUILD_NUMBER}"
     }
     
     agent any

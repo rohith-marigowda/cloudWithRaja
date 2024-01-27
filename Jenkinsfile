@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Git Checkout') {
             steps {
-                gitCheckout('https://github.com/rohith-marigowda/jenkins-k8s-intergation-sharedLibrary.git', 'main', 'github')
+                gitCheckout('https://github.com/rohith-marigowda/jenkins-k8s-intergation-sharedLibrary.git', 'master', 'github')
             }
         }
 

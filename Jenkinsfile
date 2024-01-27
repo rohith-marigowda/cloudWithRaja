@@ -9,7 +9,8 @@ pipeline {
     stages {
         stage('Git Checkout') {
             steps {
-		    git 'https://github.com/rohith-marigowda/cloudWithRaja.git'
+		    //git 'https://github.com/rohith-marigowda/cloudWithRaja.git'
+		    git branch: 'main', changelog: false, poll: false, url: 'https://github.com/rohith-marigowda/cloudWithRaja'
             }
         }
 

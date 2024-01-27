@@ -30,15 +30,19 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-                docker.build('$dockerImage:$dockerTag')
+		    script{
+			    docker.build('$dockerImage:$dockerTag')
+		    }
             }
         }
 
         stage('Docker Push') {
             steps {
-                docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
-                docker.image('$dockerImage:$dockerTag').push()
+		    script{
+			docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
+                	docker.image('$dockerImage:$dockerTag').push()
                     }
+		    }
             }
         }
     }

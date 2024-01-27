@@ -21,10 +21,10 @@ pipeline {
 
 	stage('SonarQube analysis') {
         steps{
-        withSonarQubeEnv('sonarqube-9.7.1') { 
+        //withSonarQubeEnv('sonarqube-9.7.1') { 
         sh 'echo execute below command for sonar code analysis'
 		//sh "mvn sonar:sonar"
-    }
+    //}
         }
         }    
 

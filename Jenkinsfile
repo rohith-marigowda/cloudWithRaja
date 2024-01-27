@@ -1,34 +1,45 @@
-node {
-    def app
+pipeline {
 
-    stage('Clone repository') {
-      
-
-        checkout scm
-    }
-
-    stage('Build image') {
-  
-       app = docker.build("raj80dockerid/test")
-    }
-
-    stage('Test image') {
-  
-
-        app.inside {
-            sh 'echo "Tests passed"'
-        }
-    }
-
-    stage('Push image') {
-        
-        docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
-            app.push("${env.BUILD_NUMBER}")
-        }
+	environment {
+	dockerImage = "rohithmarigowda/assignment"
+        dockerTag = "${BRANCH_NAME}-${BUILD_NUMBER}"
     }
     
-    stage('Trigger ManifestUpdate') {
-                echo "triggering updatemanifestjob"
-                build job: 'updatemanifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
+    agent any
+    stages {
+        stage('Git Checkout') {
+            steps {
+                gitCheckout('https://github.com/rohith-marigowda/jenkins-k8s-intergation-sharedLibrary.git', 'master', 'github')
+            }
         }
+
+	stage('Run Unit and Integration tests'){
+  	    steps {
+		echo 'In this step run unit and integration tests'
+	    }
+	 }
+
+	stage('SonarQube analysis') {
+        steps{
+        withSonarQubeEnv('sonarqube-9.7.1') { 
+        sh 'echo execute below command for sonar code analysis'
+		//sh "mvn sonar:sonar"
+    }
+        }
+        }    
+
+        stage('Docker Build') {
+            steps {
+                docker.build('$dockerImage:$dockerTag')
+            }
+        }
+
+        stage('Docker Push') {
+            steps {
+                docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
+                docker.image('$dockerImage:$dockerTag').push()
+                    }
+            }
+        }
+    }
 }
